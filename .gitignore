@@ -1,0 +1,4 @@
+# Git Ignore - don't commit to version control
+*.pyc
+__pycache__
+settings.conf

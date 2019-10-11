@@ -55,10 +55,16 @@ logfile_maxrotate = 10
 source inventory/env_vars_local.sourceme
 ```
 
-- Start the development server
+- Create the database models
 
 ```bash
 cd inventory
+python3 manage.py migrate
+```
+
+- Start the development server
+
+```bash
 python3 manage.py runserver
 ```
 

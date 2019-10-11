@@ -7,6 +7,7 @@ An inventory systems and stats list.
 ## Directories
 
 - inventory -> Top level Django project directory.
+- package_build -> Files for creating a pip installable package.
 
 ## Files
 

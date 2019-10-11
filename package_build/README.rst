@@ -10,9 +10,9 @@ Detailed documentation is in the "docs" directory.
 Build package
 -----------
 
-Build the package by:
+Build the package by::
 
-``python3 setup.py sdist``
+    python3 setup.py sdist
 
 Quick start
 -----------

@@ -1,3 +1,7 @@
 # Set default base django settings
 export DJANGO_SETTINGS_MODULE=inventory.settings.base
 
+echo -e "${DJANGO_SETTINGS_MODULE}"
+echo "Base settings sourced - static files will need to be served by a web server."
+echo "1) Config static file location in inventory/settings/base.py.(STATIC_ROOT)"
+echo "2) Run 'python manage.py collectstatic'."

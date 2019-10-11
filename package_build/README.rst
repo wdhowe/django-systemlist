@@ -7,6 +7,13 @@ In order to add/modify system or OS types, see models.py.
 
 Detailed documentation is in the "docs" directory.
 
+Build package
+-----------
+
+Build the package by:
+
+``python3 setup.py sdist``
+
 Quick start
 -----------
 

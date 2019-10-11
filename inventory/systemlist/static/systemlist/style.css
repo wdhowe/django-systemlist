@@ -1,0 +1,116 @@
+/* style.css : Styles for html templates */                                                
+ 
+/* ---- Table Styles ---- */
+/* table settings */
+table.layout {
+  border-collapse: collapse;
+  border-spacing: 0px;
+  padding: 0px;
+}
+td.layout {
+  border-spacing: 0px;
+  padding: 0px;
+}
+ 
+table.systemlist {
+  border-collapse: collapse;
+}
+ 
+/* table headers, table definitions */
+table.systemlist, th.systemlist, td.systemlist {
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+ 
+/* th -> table headers */
+th.systemlist {
+    background-color: #4CAF50;
+    color: white;
+}
+ 
+/* tr -> table rows
+ *  * tr:nth-child -> color every even table row 
+ *   * tr:hover -> Mouse hover background color effect */
+tr.systemlist:nth-child(even) {background-color: #f2f2f2;}
+tr.systemlist:hover {background-color: #ddd;}
+ 
+td.center {
+  text-align: center;
+}
+ 
+td.totals {
+  background-color: #b3b3b3;
+  font-weight: bold;
+}
+ 
+ 
+/* ---- Menu Styles ---- */
+ul.asset_type {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  width: 671px;
+}
+ 
+ul.env {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  width: 163px;
+}
+ 
+ul.stats {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  width: 60px;
+}
+ 
+ul.asset_hardware {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  width: 163px;
+}
+ 
+li {
+  float: left;
+}
+ 
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 10px 10px;
+  text-decoration: none;
+}
+ 
+a:hover:not(.active) {
+  background-color: #111;
+}
+ 
+.active {
+  background-color:#4CAF50;
+}
+ 
+ 
+/* ---- Non-Menu Styles ---- */
+a:link.plain {
+  background-color: #ffffff;
+}
+a:visited.plain {
+  background-color: #ffffff;
+}
+ 
+a:hover.plain {
+  background-color: #4caf50;
+}

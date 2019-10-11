@@ -1,0 +1,3 @@
+# Set local development django settings
+export DJANGO_SETTINGS_MODULE=inventory.settings.local_dev
+

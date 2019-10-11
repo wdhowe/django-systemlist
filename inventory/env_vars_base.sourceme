@@ -1,0 +1,3 @@
+# Set default base django settings
+export DJANGO_SETTINGS_MODULE=inventory.settings.base
+

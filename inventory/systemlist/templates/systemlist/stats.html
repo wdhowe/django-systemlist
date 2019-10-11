@@ -1,0 +1,214 @@
+<!DOCTYPE html>                                                                            
+<html>
+<head>
+  <title>Asset List - Stats</title>
+</head>
+<body>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'systemlist/style.css' %}" />
+ 
+<!-- Export button jquery (https://github.com/kayalshri/tableExport.jquery.plugin) -->
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'systemlist/tableExport.js' %}"></script>
+<script type="text/javascript" src="{% static 'systemlist/jquery.base64.js' %}"></script>
+ 
+<!-- Layout Divide: Left Side Menu for Devices -->
+<table class="layout">
+<tr>
+<!-- For white gaps in between Device Types and Phys/Virt, this must be larger than stylesheet width -->
+<!-- Set to style sheet width+25 px -->
+<td class="layout" width="696px">
+ 
+<!-- Device Menu: No Devices Active on Stats Page -->
+<ul class="asset_type">
+<li><a href="{% url 'index' %}">All Devices</a></li>
+
+{% for asset in device_stats %}
+
+{% if asset.asset_type != "Total" %}
+<li><a href="{% url 'index' %}type/{{ asset.asset_type|lower }}/">{{ asset.asset_type }}</a></li>
+{% endif %}
+
+{% endfor %}
+</ul>
+</td>
+<!-- END of Layout Divide: Left Side Menu for Devices -->
+ 
+ 
+<!-- Layout Divide: Right Side Phys and Virt Links -->
+<!-- For white gaps in between Phys/Virt and Stats, this must be larger than stylesheet width -->
+<!-- Set to style sheet width+25 px -->
+<td class="layout" width="188px">
+<!-- Asset Type Menu: Physical and Virtual -->
+  <ul class ="asset_hardware">
+    <li><a href="{% url 'index' %}hw/physical/">Physical</a></li>
+    <li><a href="{% url 'index' %}hw/virtual/">Virtual</a></li>
+  </ul>
+</td>
+<!-- END of Layout Divide: Right Side Phys and Virt Links -->
+ 
+ 
+<!-- Layout Divide: Right Side Additional Links -->
+<td class="layout">
+<ul class="stats">
+  <li><a class="active" href="{% url 'stats' %}">Stats</a></li>
+</ul>
+</td>
+<!-- END of Layout Divide: Right Side Additional Links -->
+ 
+</tr>
+ 
+ 
+<!-- START of Layout Divide: 2nd row for logged in message -->
+<tr>
+<td class="layout">
+</td>
+ 
+<td class="layout">
+{% if user.is_authenticated %}
+  Logged in: {{ user.username }}<br>
+  <a class="plain" href="/logout/">Logout</a>                                              
+{% endif %}
+</td>
+</tr>
+<!-- END of Layout Divide: 2nd row for logged in message -->
+ 
+ 
+<!-- Layout Divide: Bottom Stats Table (Asset Counts) -->
+<tr>
+<td class="layout" colspan=3>
+ 
+<br>
+<b>Asset List - Statistics - Asset Counts</b>
+ 
+<!-- Export Buttons -->
+<a href="#" class="plain" onclick="$('#assetcounts').tableExport({type:'csv',escape:'false'});"><img src="{% static 'systemlist/csv.png' %}" width="24px" title="Export CSV"></a>
+<a href="#" class="plain" onclick="$('#assetcounts').tableExport({type:'excel',escape:'false'});"><img src="{% static 'systemlist/xls.png' %}" width="24px" title="Export Excel"></a>
+ 
+<br>
+<!-- Stats Table (Asset Counts) -->
+<table class="systemlist" id="assetcounts">
+<thead>
+  <tr class="systemlist">
+    <th class="systemlist">Device Type</th>
+    <th class="systemlist">Systems</th>
+    <th class="systemlist">Physical</th>
+    <th class="systemlist">Physical Linux</th>
+    <th class="systemlist">Physical Windows</th>
+    <th class="systemlist">Physical Other</th>
+    <th class="systemlist">Virtual</th>
+    <th class="systemlist">Virtual Linux</th>
+    <th class="systemlist">Virtual Windows</th>
+    <th class="systemlist">Virtual Other</th>
+  </tr>
+</thead>
+<tbody>
+  {% for asset in device_stats %}
+    <tr class="systemlist">
+      {% if asset.asset_type == 'Total' %}
+        <td class="systemlist totals"><b>{{ asset.asset_type }}</b></td>
+        <td class="systemlist center totals">{{ asset.total }}</td>
+        <td class="systemlist center totals">{{ asset.physical }}</td>
+        <td class="systemlist center totals">{{ asset.physical_linux }}</td>
+        <td class="systemlist center totals">{{ asset.physical_windows }}</td>
+        <td class="systemlist center totals">{{ asset.physical_other }}</td>
+        <td class="systemlist center totals">{{ asset.virtual }}</td>
+        <td class="systemlist center totals">{{ asset.virtual_linux }}</td>
+        <td class="systemlist center totals">{{ asset.virtual_windows }}</td>
+        <td class="systemlist center totals">{{ asset.virtual_other }}</td>
+      {% else %}
+        <td class="systemlist">{{ asset.asset_type }}</td>
+        <td class="systemlist center">{{ asset.total }}</td>
+        <td class="systemlist center">{{ asset.physical }}</td>
+        <td class="systemlist center">{{ asset.physical_linux }}</td>
+        <td class="systemlist center">{{ asset.physical_windows }}</td>
+        <td class="systemlist center">{{ asset.physical_other }}</td>
+        <td class="systemlist center">{{ asset.virtual }}</td>
+        <td class="systemlist center">{{ asset.virtual_linux }}</td>
+        <td class="systemlist center">{{ asset.virtual_windows }}</td>
+        <td class="systemlist center">{{ asset.virtual_other }}</td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+  <tr class="systemlist">
+    <td class="systemlist totals">Total Linux</td>
+    <td class="systemlist center">{{ total_linux }}</td>
+  </tr>
+  <tr class="systemlist">
+    <td class="systemlist totals">Total Windows</td>
+    <td class="systemlist center">{{ total_windows }}</td>
+  </tr>
+  <tr class="systemlist">
+    <td class="systemlist totals">Total Other</td>                                          
+    <td class="systemlist center">{{ total_other }}</td>
+  </tr>
+  <tr class="systemlist">
+    <td class="systemlist totals">Total VMware ESXi*</td>
+    <td class="systemlist center">{{ total_vmware }}</td>
+  </tr>
+</tbody>
+</table>
+*Physical Virtual Hosts (VMware ESXi) count is included in Physical Linux/Total Linux counts.
+<!-- END of Stats Table (Asset Counts) -->
+ 
+</td>
+</tr>
+<!-- END of Layout Divide: Bottom Stats Table (Asset Counts) -->
+ 
+<!-- Layout Divide: Bottom Stats Table (OS Counts) -->
+<tr>
+<td class="layout" colspan=3>
+ 
+<br>
+<b>Asset List - Statistics - OS Counts</b>
+ 
+<!-- Export Buttons -->
+<a href="#" class="plain" onclick="$('#oscounts').tableExport({type:'csv',escape:'false'});"><img src="{% static 'systemlist/csv.png' %}" width="24px" title="Export CSV"></a>
+<a href="#" class="plain" onclick="$('#oscounts').tableExport({type:'excel',escape:'false'});"><img src="{% static 'systemlist/xls.png' %}" width="24px" title="Export Excel"></a>
+ 
+<br>
+<!-- Stats Table (OS Counts) -->
+<table class="systemlist" id="oscounts">
+<thead>
+  <tr class="systemlist">
+    <th class="systemlist">Device Type</th>
+    {% for os_name in os_list %}
+      <th class="systemlist">{{ os_name }}</th>
+    {% endfor %}
+  </tr>
+</thead>
+<tbody>
+  {% for asset in device_stats %}
+    <tr class="systemlist">
+      {% if asset.asset_type == 'Total' %}
+        <td class="systemlist totals"><b>{{ asset.asset_type }}</b></td>
+        {% for name in asset.os_count_stats %}
+          <td class="systemlist center totals">{{ name.count }}</td>
+        {% endfor %}
+ 
+      {% else %}
+        <td class="systemlist">{{ asset.asset_type }}</td>
+        {% for name in asset.os_count_stats %}
+          <td class="systemlist center">{{ name.count }}</td>
+        {% endfor %}
+      {% endif %}
+    </tr>
+ 
+  {% endfor %}
+</tbody>
+</table>
+<!-- END of Stats Table (OS Counts) -->
+ 
+</td>
+</tr>
+</table>
+<!-- END of Layout Divide: Bottom Stats Table (OS Counts) -->
+ 
+<br>
+<hr>
+<br>
+
+<a class="plain" target="_blank" href="https://icons8.com/icons/set/csv">Office</a> icons by <a class="plain" target="_blank" href="https://icons8.com">Icons8</a>
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>                                                                            
+<html>
+<head>
+  <title>Asset List</title>
+</head>
+<body>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'systemlist/style.css' %}" />
+ 
+<!-- Export button jquery (https://github.com/kayalshri/tableExport.jquery.plugin) -->
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'systemlist/tableExport.js' %}"></script>
+<script type="text/javascript" src="{% static 'systemlist/jquery.base64.js' %}"></script>
+ 
+<!-- Layout Divide: Left Side Menu for Devices -->
+<table class="layout">
+<tr>
+<!-- For white gaps in between Device Types and Phys/Virt, this must be larger than stylesheet width -->
+<!-- Set to style sheet width+25 px -->
+<td class="layout" width="696px">
+ 
+<!-- Device Menu: Determine Active Device -->
+<ul class="asset_type">
+
+<!-- No asset type, 'all devices' active -->
+{% if not asset_type %}
+  <li><a class="active" href="{% url 'index' %}">All Devices</a></li>
+
+<!-- List all asset types -->
+  {% for asset in asset_type_list %}
+    <li><a href="{% url 'index' %}type/{{ asset|lower }}/">{{ asset }}</a></li>
+  {% endfor %}
+
+<!-- Asset type passed -->
+{% else %}
+  <li><a href="{% url 'index' %}">All Devices</a></li>
+
+  <!-- List all asset types -->
+  {% for asset in asset_type_list %}
+  
+    {% if asset|lower == asset_type %}
+      <li><a class="active" href="{% url 'type_all_env' asset_type %}">{{ asset }}</a></li>
+    {% else %}
+      <li><a href="{% url 'index' %}type/{{ asset|lower }}/">{{ asset }}</a></li>
+    {% endif %}
+
+  {% endfor %}
+
+{% endif %}
+
+</ul>
+</td>
+<!-- END of Layout Divide: Left Side Menu for Devices -->
+ 
+ 
+<!-- Layout Divide: Right Side Phys and Virt Links -->
+<!-- For white gaps in between Phys/Virt and Stats, this must be larger than stylesheet width -->
+<!-- Set to style sheet width+25 px -->
+<td class="layout" width="188px">
+<!-- Asset Type Menu: Physical and Virtual -->
+  <ul class ="asset_hardware">
+  {% if asset_hardware == 'physical' %}
+    <li><a class="active" href="{% url 'asset_hardware' asset_hardware %}">Physical</a></li>
+    <li><a href="{% url 'index' %}hw/virtual/">Virtual</a></li>
+  {% elif asset_hardware == 'virtual' %}
+    <li><a href="{% url 'index' %}hw/physical/">Physical</a></li>
+    <li><a class="active" href="{% url 'asset_hardware' asset_hardware %}">Virtual</a></li>
+  {% else %}
+    <li><a href="{% url 'index' %}hw/physical/">Physical</a></li>
+    <li><a href="{% url 'index' %}hw/virtual/">Virtual</a></li>
+  {% endif %}
+  </ul>
+</td>
+<!-- END of Layout Divide: Right Side Phys and Virt Links -->
+ 
+ 
+<!-- Layout Divide: Right Side Additional Links -->
+<td class="layout">
+<ul class="stats">
+  <li><a href="{% url 'stats' %}">Stats</a></li>
+</ul>
+</td>
+<!-- END of Layout Divide: Right Side Additional Links -->
+ 
+</tr>
+ 
+ 
+<!-- Layout Divide: Left Side Environment Menu -->
+<tr>
+<td class="layout">
+ 
+<!-- Environment Menu: Dynamic Asset Type Links -->
+<ul class="env">
+{% if env == 'dev' %}
+  {% if asset_type %}
+    <li><a class="active" href="{% url 'type_env' asset_type env %}">Dev</a></li>
+    <li><a href="{% url 'type_all_env' asset_type %}env/test/">Test</a></li>
+    <li><a href="{% url 'type_all_env' asset_type %}env/prod/">Prod</a></li>
+  {% else %}
+    <li><a class="active" href="{% url 'env' env %}">Dev</a></li>
+    <li><a href="{% url 'index' %}env/test/">Test</a></li>
+    <li><a href="{% url 'index' %}env/prod/">Prod</a></li>
+  {% endif %}
+{% elif env == 'test' %}
+  {% if asset_type %}
+    <li><a href="{% url 'type_all_env' asset_type %}env/dev/">Dev</a></li>
+    <li><a class="active" href="{% url 'type_env' asset_type env %}">Test</a></li>
+    <li><a href="{% url 'type_all_env' asset_type %}env/prod/">Prod</a></li>
+  {% else %}
+    <li><a href="{% url 'index' %}env/dev/">Dev</a></li>
+    <li><a class="active" href="{% url 'env' env %}">Test</a></li>
+    <li><a href="{% url 'index' %}env/prod/">Prod</a></li>
+  {% endif %}
+{% elif env == 'prod' %}
+  {% if asset_type %}
+    <li><a href="{% url 'type_all_env' asset_type %}env/dev/">Dev</a></li>
+    <li><a href="{% url 'type_all_env' asset_type %}env/test/">Test</a></li>
+    <li><a class="active" href="{% url 'type_env' asset_type env %}">Prod</a></li>
+  {% else %}
+    <li><a href="{% url 'index' %}env/dev/">Dev</a></li>
+    <li><a href="{% url 'index' %}env/test/">Test</a></li>
+    <li><a class="active" href="{% url 'env' env %}">Prod</a></li>
+  {% endif %}
+{% else %}
+  {% if asset_type %}
+    <li><a href="{% url 'type_all_env' asset_type %}env/dev/">Dev</a></li>
+    <li><a href="{% url 'type_all_env' asset_type %}env/test/">Test</a></li>
+    <li><a href="{% url 'type_all_env' asset_type %}env/prod/">Prod</a></li>
+  {% else %}
+    <li><a href="{% url 'index' %}env/dev/">Dev</a></li>
+    <li><a href="{% url 'index' %}env/test/">Test</a></li>
+    <li><a href="{% url 'index' %}env/prod/">Prod</a></li>
+  {% endif %}
+{% endif %}
+</ul>
+</td>
+<!-- END of Layout Divide: Left Side Environment Menu -->
+ 
+ 
+<!-- START of Layout Divide: 2nd row for logged in message -->
+<td class="layout">
+{% if user.is_authenticated %}
+  Logged in: {{ user.username }}<br>
+  <a class="plain" href="/logout/">Logout</a>
+{% endif %}
+</td> 
+</tr>
+<!-- END of Layout Divide: 2nd row for logged in message -->
+ 
+ 
+<!-- Layout Divide: Bottom Asset List Table -->
+<tr>
+<td class="layout" colspan=3>
+ 
+<!-- Asset List Above Table: Display Device and Environment -->
+<br>
+
+<b>Asset List - </b>
+
+<!-- No asset_type, display All -->
+{% if not asset_type %}
+  <b>All Types - </b>
+
+<!-- asset_type specified, find the match -->
+{% else %}
+  {% for asset in asset_type_list %}
+    {% if asset|lower == asset_type %}
+      <b>{{ asset }} - </b>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<!-- Display environment -->
+{% if env == 'dev' %}
+  <b>Development Environment</b>
+  {% elif env == 'test' %}
+  <b>Test Environment</b>
+  {% elif env == 'prod' %}
+  <b>Production Environment</b>
+  {% else %}
+  <b>All Environments</b>
+{% endif %}
+ 
+<!-- Physical/Virtual Filter -->
+{% if asset_hardware %}
+  {% if asset_hardware == 'physical' %}
+    <b> - Physical -</b>
+  {% elif asset_hardware == 'virtual' %}
+    <b> - Virtual -</b>
+  {% endif %}
+{% endif %}
+ 
+<!-- Assets List Above Table: Number of Assets Displayed -->
+{% if asset_count %}
+  {% if asset_count == 1 %}
+    <b> ({{ asset_count }} asset)</b>
+  {% else %}
+    <b> ({{ asset_count }} assets)</b>
+  {% endif %}
+{% else %}
+  <b> (0 assets)</b>
+{% endif %}
+ 
+<!-- Export Buttons -->
+<a href="#" class="plain" onclick="$('#assetlist').tableExport({type:'csv',escape:'false'});"><img src="{% static 'systemlist/csv.png' %}" width="24px" title="Export CSV"></a>
+<a href="#" class="plain" onclick="$('#assetlist').tableExport({type:'excel',escape:'false'});"><img src="{% static 'systemlist/xls.png' %}" width="24px" title="Export Excel"></a>
+ 
+<br>
+<!-- The Assets List Table -->
+<table class="systemlist" id="assetlist">
+ <thead>
+  <tr class="systemlist">
+    <th class="systemlist">Device Type</th>
+    <th class="systemlist">Name</th>
+    <th class="systemlist">Description</th>
+    <th class="systemlist">Environment</th>
+    <th class="systemlist">OS</th>
+    <th class="systemlist">Hardware</th>
+  </tr>
+ </thead>
+ <tbody>
+  {% for name in all_asset_list %}
+    <tr class="systemlist">
+      <td class="systemlist">{{ name.asset_type }}</td>
+      <td class="systemlist">{{ name.asset_name }}</td>
+      <td class="systemlist">{{ name.asset_description }}</td>
+      <td class="systemlist center">{{ name.asset_env }}</td>
+      <td class="systemlist center">{{ name.asset_os }}</td>
+      <td class="systemlist center">{{ name.asset_hardware }}</td>
+    </tr>
+  {% endfor %}
+ </tbody>
+</table>
+<!-- END of Assets List Table -->
+ 
+</td>
+</tr>
+</table>
+<!-- END of Layout Divide: Bottom Assets List Table -->
+ 
+<br>
+<hr>
+<br>
+
+<a class="plain" target="_blank" href="https://icons8.com/icons/set/csv">Office</a> icons by <a class="plain" target="_blank" href="https://icons8.com">Icons8</a>
+
+</body>
+</html>

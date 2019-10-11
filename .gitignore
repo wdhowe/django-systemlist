@@ -1,4 +1,6 @@
 # Git Ignore - don't commit to version control
+*.log
 *.pyc
 __pycache__
+db.sqlite3
 settings.conf

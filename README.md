@@ -1,6 +1,6 @@
 # Django-SystemList
 
-An inventory systems and stats list.
+A system inventory and stats list.
 
 ----
 
